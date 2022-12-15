@@ -10,21 +10,18 @@ Copy and paste this document into a [gist](https://gist.github.com/) and then ed
 
 ## Problem Statement #1
 
-This App manages tasks and events in a house hold by motivate kids to simply choose a chore and achive goals to earn points.
-That eventuly can be reedem their points.
+This App motivate kids to do chores and establish good habits and positive behaviors by taking responsibility and turn chores into a fun game by achive goals and scoring points. Then reward those who exceed expectations by reedeming their points.
 
 ## MVP Feature Set
 1. As a user, I can access to my personal account. 
 2. As a user, I pick chores to do.
-3. As a user, I should be able to mark it as done. 
+    - view a list of chores and select the wanted chores.
+3. As a user, I should be able to mark it as done.
+    - A button to be clicked when the chore is done and see the earning points increase.
 4. As a user, I'll be able to see the progress "points".
 5. As a user, I'll be able to reedem my points.
 
-1.  An App feature
-    - A bullet or two describing the feature in more detail
-1.  Another App feature
-    - More details in sub-bullets
-
+    
 ### Potential Additional Features
 
 1.  More features 
@@ -32,11 +29,10 @@ That eventuly can be reedem their points.
 
 ## Draft Technology Choices
 
-
 - Front-End: React
 - Back-End: Flask
 - Database: SQL
-- Style: CSS
+- Style: CSS or Bootstrap
 -Deployment: Heroku
 
 ## Additional content, diagrams, wireframes, user flows, etc.
