@@ -26,6 +26,7 @@ This App motivate kids to do chores and establish good habits and positive behav
 
 1.  More features 
 - log in 
+- Calendar
 
 ## Draft Technology Choices
 
