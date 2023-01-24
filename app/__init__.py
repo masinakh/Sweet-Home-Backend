@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+# from auth import oauth_bp
+
 import os
 db = SQLAlchemy()
 migrate = Migrate()
@@ -26,4 +28,7 @@ def create_app(test_config=None):
     # app.register_blueprint(task_bp)
     # from .routes.goal import goal_bp
     # app.register_blueprint(goal_bp)
+    # from app.routes.oauth2 import oauth_bp
+    # app.register_blueprint(oauth_bp)
+
     return app
