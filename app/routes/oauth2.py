@@ -1,16 +1,16 @@
 import os
 import pathlib
 import requests
-from flask import Flask, session, abort, redirect, request
+from flask import Flask, session, abort, redirect, request,Blueprint
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 
-# oauth_bp = Blueprint("oauth_bp", __name__, url_prefix="/")
+oauth_bp = Blueprint("oauth_bp", __name__, url_prefix="/")
 
-app = Flask("Google Login App")
-app.secret_key = os.environ.get("GOOGLE_SECRET_KEY")
+# app = Flask("Google Login App")
+
 
  # make sure this matches with that's in client_secret.json
 
@@ -22,7 +22,7 @@ client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://localhost/callback"
+    redirect_uri="http://127.0.0.1:5000/callback"
 )
 
 
@@ -36,14 +36,14 @@ def login_is_required(function):
     return wrapper
 
 
-@app.route("/login")
+@oauth_bp.route("/login")
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
     return redirect(authorization_url)
+print("test")
 
-
-@app.route("/callback")
+@oauth_bp.route("/callback")
 def callback():
     flow.fetch_token(authorization_response=request.url)
 
@@ -66,23 +66,23 @@ def callback():
     return redirect("/protected_area")
 
 
-@app.route("/logout")
+@oauth_bp.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
 
 
-@app.route("/")
+@oauth_bp.route("/")
 def index():
-    return "Hello World a href='/login'buttonLogin/button/a"
+    return "Hello World <a href='/login'><button>Login</button></a>"
 
 
-@app.route("/protected_area")
+@oauth_bp.route("/protected_area")
 @login_is_required
 def protected_area():
-    return f"Hello {session['name']}! br/ a href='/logout'buttonLogout/button/a"
+    return f"Hello {session['name']}! </br> <a href='/logout'><button>Logout</button></a>"
 
 
-if __name__ == "__main__":
-    # app.run(host='0.0.0.0', port=80, debug=True)
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     # app.run(host='0.0.0.0', port=80, debug=True)
+#     app.run(debug=True)

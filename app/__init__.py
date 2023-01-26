@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 # from auth import oauth_bp
+# from app.routes import oauth2
 
 import os
 db = SQLAlchemy()
@@ -27,12 +28,13 @@ def create_app(test_config=None):
     from app.models.member_member import MemberMember
     db.init_app(app)
     migrate.init_app(app, db)
+    app.secret_key = os.environ.get("GOOGLE_SECRET_KEY")
     # # Register Blueprints here
     # from .routes.task import task_bp
     # app.register_blueprint(task_bp)
     # from .routes.goal import goal_bp
     # app.register_blueprint(goal_bp)
-    # from app.routes.oauth2 import oauth_bp
-    # app.register_blueprint(oauth_bp)
+    from app.routes.oauth2 import oauth_bp
+    app.register_blueprint(oauth_bp)
 
     return app
