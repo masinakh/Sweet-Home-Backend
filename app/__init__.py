@@ -25,7 +25,7 @@ def create_app(test_config=None):
     from app.models.reward import Reward
     from app.models.member import Member
     from app.models.member_reward import MemberReward
-    from app.models.member_member import MemberMember
+    from app.models.family import Family
     db.init_app(app)
     migrate.init_app(app, db)
     app.secret_key = os.environ.get("GOOGLE_SECRET_KEY")

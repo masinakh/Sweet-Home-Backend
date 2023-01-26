@@ -7,6 +7,7 @@ class Chore(db.Model):
     is_completed = db.Column(db.Boolean, default=False)
     member_id = db.Column(db.Integer, db.ForeignKey("member.id" ), nullable = True)
     member = db.relationship("Member", back_populates = "chores")
+    family_id = db.Column(db.Integer, db.ForeignKey("family.id" ), nullable = False)
 
 
 
