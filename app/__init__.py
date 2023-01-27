@@ -30,8 +30,8 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
     app.secret_key = os.environ.get("GOOGLE_SECRET_KEY")
     # # Register Blueprints here
-    # from .routes.task import task_bp
-    # app.register_blueprint(task_bp)
+    from .routes.chore import chore_bp
+    app.register_blueprint(chore_bp)
     # from .routes.goal import goal_bp
     # app.register_blueprint(goal_bp)
     from app.routes.oauth2 import oauth_bp

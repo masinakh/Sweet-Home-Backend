@@ -8,8 +8,8 @@ class Member(db.Model):
     points = db.Column(db.Integer)
     is_parent = db.Column(db.Boolean, default=False)
     chores = db.relationship("Chore", back_populates = "member")
-    rewards = db.relationship("Reward", secondary="member_reward", backref="members")
-    family_id = db.Column(db.Integer, db.ForeignKey("family.id" ), nullable = False)
+    rewards = db.relationship("Reward", secondary="member_reward", back_populates="members")
+    family_id = db.Column(db.Integer, db.ForeignKey("family.id" ), nullable = True)
     family = db.relationship("Family",back_populates = "members" )
 
 
