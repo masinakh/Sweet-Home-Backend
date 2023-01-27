@@ -12,4 +12,23 @@ class Member(db.Model):
     family_id = db.Column(db.Integer, db.ForeignKey("family.id" ), nullable = True)
     family = db.relationship("Family",back_populates = "members" )
 
+    def to_dict(self):
+        return {
+            "id":self.id,
+            "name": self.name,
+            "email": self.email,
+            "points": self.points,
+            "is_parent": self.is_parent,
+            "family_id": self.family_id,
+        }
+
+    @classmethod
+    def from_dict(cls, member_dict):
+        return Member (
+            name=member_dict["name"],
+            email = member_dict["email"],
+            is_parent = member_dict["is_parent"]
+        )
+
+
 

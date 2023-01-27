@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request, abort, make_response
 from app import db
 from app.models.chore import Chore
-from app.models.member import Member
 from sqlalchemy import or_
 from .helper_function import get_model_from_id
 
@@ -18,7 +17,7 @@ def get_all_chores(family_id):
     chores_list = [chore.to_dict() for chore in chores]
     return jsonify(chores_list), 200
 
-@chore_bp.route("<family_id>", methods=["POST"])
+@chore_bp.route("/<family_id>", methods=["POST"])
 def create_new_chore(family_id):
     request_body = request.get_json()
     try:
