@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort, make_response
 from app import db
 from app.models.chore import Chore
+from app.models.member import Member
 from sqlalchemy import or_
 from .helper_function import get_model_from_id
 
@@ -32,7 +33,11 @@ def create_new_chore(family_id):
 @chore_bp.route("/<chore_id>/mark_complete", methods=["PATCH"])
 def update_chore(chore_id):
     chore= get_model_from_id(Chore, chore_id)
+    if chore.member_id == None:
+        return jsonify({"msg":"chore was not assigned"})
     chore.is_completed = True
+    member = get_model_from_id(Member, chore.member_id)
+    member.points += chore.points
     db.session.commit()
     return jsonify({"chore":chore.to_dict()}),200
 

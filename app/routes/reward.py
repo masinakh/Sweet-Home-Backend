@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request, abort, make_response
 from app import db
+from app.models.member import Member
+from app.models.member_reward import MemberReward
 
 from app.models.reward import Reward
 from sqlalchemy import or_
@@ -32,8 +34,14 @@ def create_new_reward(family_id):
 @reward_bp.route("/<reward_id>/<member_id>", methods=["PATCH"])
 def select_one_reward(reward_id, member_id):
     reward= get_model_from_id(Reward, reward_id)
-    reward.member_id=member_id
+    member= get_model_from_id(Member, member_id)
+    if member.points < reward.points:
+        return jsonify({"msg": "you don't have enough points do more chores"})
+    member.points -= reward.point
+    new_member_reward = MemberReward.create(member_id, reward_id)
+    db.session.add(new_member_reward)
     db.session.commit()
+
     return jsonify({"reward":reward.to_dict()}),200
 
 
