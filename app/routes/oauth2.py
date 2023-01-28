@@ -102,7 +102,7 @@ def logout():
 
 @oauth_bp.route("/")
 def index():
-    return "Hello World <a href='/login'><button>Login</button></a>"
+    return "Hello World <a href='/login'><button class='login-with-google-btn'> Sign with Google</button></a>"
 
 
 @oauth_bp.route("/protected_area")
