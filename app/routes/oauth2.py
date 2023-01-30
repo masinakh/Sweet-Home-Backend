@@ -47,7 +47,7 @@ def login():
     session["state"] = state
     # print(authorization_url)
     # print(request.args)
-    session["create_family"]=request.args.get("create_family",False)
+    session["create_family"] = request.args.get("create_family",False)
     return redirect(authorization_url)
 # print("test")
 
@@ -86,9 +86,9 @@ def callback():
         member.is_parent = True
         db.session.add(member)
         db.session.commit()
-    print(session)
+    # print(session)
     session['member'] = member.to_dict()
-    print(session['member'])
+    # print(session['member'])
     
     return redirect("/protected_area")
     
@@ -113,4 +113,4 @@ def protected_area():
 
 # if __name__ == "__main__":
 #     # app.run(host='0.0.0.0', port=80, debug=True)
-#     app.run(debug=True)
+#     

@@ -39,5 +39,6 @@ def create_app(test_config=None):
    
     from app.routes.oauth2 import oauth_bp
     app.register_blueprint(oauth_bp)
-
+    
+    app.run(debug=True)
     return app

@@ -25,6 +25,7 @@ def get_all_chores():
 @login_is_required
 def create_new_chore():
     member = get_member_from_session()
+    print(member)
     if not member.is_parent:
         return jsonify({"msg":"only parent/guardian are allowed to add chores."})
     request_body = request.get_json()

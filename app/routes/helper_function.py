@@ -13,4 +13,11 @@ def get_model_from_id(cls,model_id):
     return chosen_object
 
 def get_member_from_session():
-    return Member(**session["member"])
+    # print(session["member"])
+    # return Member(**session["member"])
+     return Member (
+            name = session["member"]["name"],
+            email = session["member"]["email"],
+            is_parent = session["member"]["is_parent"]
+    
+        )
