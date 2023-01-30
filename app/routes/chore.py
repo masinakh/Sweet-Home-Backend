@@ -43,6 +43,10 @@ def create_new_chore():
 @login_is_required
 def set_member_to_chore(chore_id, member_id):
     chore= get_model_from_id(Chore, chore_id)
+    member = get_member_from_session()
+    if member.family_id != chore.family_id:
+        return jsonify({"msg":"chore is not assigned to you."}),403
+
     chore.member_id=member_id
     db.session.commit()
     return jsonify({"chore":chore.to_dict()}),200
@@ -72,6 +76,9 @@ def update_chore(chore_id):
 @login_is_required
 def delete_one_chore(chore_id):
     chore_to_delete = get_model_from_id(Chore, chore_id)
+    member = get_member_from_session()
+    if member.family_id != chore_to_delete.family_id:
+        return jsonify({"msg":"chore is not assigned to you."}),403
     db.session.delete(chore_to_delete)
     db.session.commit()
     return jsonify({
