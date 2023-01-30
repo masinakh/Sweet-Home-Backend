@@ -91,8 +91,8 @@ def callback():
     # print(session)
     del session["create_family"] 
     session["member"] = member.to_dict()
-    # print(session['member'])
-    print(member)
+    print(session['member'])
+    # print(member)
     return redirect("/protected_area")
     
 

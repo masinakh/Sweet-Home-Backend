@@ -15,10 +15,7 @@ chore_bp = Blueprint("chore_bp", __name__, url_prefix="/chores")
 @login_is_required
 def get_all_chores():
     member = get_member_from_session()
-    chores = Chore.query.filter(and_(Chore.member_id == None,Chore.family_id == member.family_id)).all()
-
-    # chores = Chore.query.filter(Chore.family_id == family_id).all()
-    
+    chores = Chore.query.filter(and_(Chore.member_id == None,Chore.family_id == member.family_id)).all()  
     chores_list = [chore.to_dict() for chore in chores]
     return jsonify(chores_list), 200
 
@@ -26,7 +23,6 @@ def get_all_chores():
 @login_is_required
 def create_new_chore():
     member = get_member_from_session()
-   
     if not member.is_parent:
         return jsonify({"msg":"only parent/guardian are allowed to add chores."}),403
     request_body = request.get_json()
@@ -46,6 +42,7 @@ def set_member_to_chore(chore_id, member_id):
     member = get_member_from_session()
     if member.family_id != chore.family_id:
         return jsonify({"msg":"chore is not assigned to you."}),403
+    # do we need to send member_id in the endpoints or we can use member.member_id
 
     chore.member_id=member_id
     db.session.commit()
