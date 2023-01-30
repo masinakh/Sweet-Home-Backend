@@ -1,11 +1,15 @@
 import os
 import pathlib
 import requests
+from app import db
 from flask import Flask, session, abort, redirect, request,Blueprint
+from functools import wraps
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
+from app.models.member import Member
+from app.models.family import Family
 
 oauth_bp = Blueprint("oauth_bp", __name__, url_prefix="/")
 
@@ -27,11 +31,12 @@ flow = Flow.from_client_secrets_file(
 
 
 def login_is_required(function):
+    @wraps(function)
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
             return abort(401)  # Authorization required
         else:
-            return function()
+            return function(*args, **kwargs)
 
     return wrapper
 
@@ -40,8 +45,11 @@ def login_is_required(function):
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
+    # print(authorization_url)
+    # print(request.args)
+    session["create_family"]=request.args.get("create_family",False)
     return redirect(authorization_url)
-print("test")
+# print("test")
 
 @oauth_bp.route("/callback")
 def callback():
@@ -63,7 +71,27 @@ def callback():
 
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
+    # print(session["google_id"])
+    member = Member.query.filter(Member.email== id_info.get("email")).first()
+    
+    if not member:
+        member = Member(name= id_info.get("name"), email= id_info.get("email"))
+        db.session.add(member)
+        db.session.commit()
+    if session["create_family"] and not member.family_id:
+        family = Family()
+        db.session.add(family)
+        db.session.commit()
+        member.family_id = family.id
+        member.is_parent = True
+        db.session.add(member)
+        db.session.commit()
+    print(session)
+    session['member'] = member.to_dict()
+    print(session['member'])
+    
     return redirect("/protected_area")
+    
 
 
 @oauth_bp.route("/logout")
