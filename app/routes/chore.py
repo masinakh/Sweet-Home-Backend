@@ -1,8 +1,8 @@
-from flask import Blueprint, jsonify, request, abort, make_response
+from flask import Blueprint, jsonify, request, abort, make_response,session
 from app import db
 from app.models.chore import Chore
 from app.models.member import Member
-from sqlalchemy import or_
+from sqlalchemy import and_
 from .helper_function import get_model_from_id, get_member_from_session
 from app.routes.oauth2 import login_is_required
 
@@ -14,7 +14,8 @@ chore_bp = Blueprint("chore_bp", __name__, url_prefix="/chores")
 @chore_bp.route("", methods=["GET"])
 @login_is_required
 def get_all_chores():
-    chores = Chore.query.filter(or_(Chore.member_id == None,Chore.family_id == None,Chore.family_id == family_id)).all()
+    member = get_member_from_session()
+    chores = Chore.query.filter(and_(Chore.member_id == None,Chore.family_id == member.family_id)).all()
 
     # chores = Chore.query.filter(Chore.family_id == family_id).all()
     
@@ -25,9 +26,9 @@ def get_all_chores():
 @login_is_required
 def create_new_chore():
     member = get_member_from_session()
-    print(member)
+   
     if not member.is_parent:
-        return jsonify({"msg":"only parent/guardian are allowed to add chores."})
+        return jsonify({"msg":"only parent/guardian are allowed to add chores."}),403
     request_body = request.get_json()
     try:
         new_chore = Chore.from_dict(request_body)
@@ -38,25 +39,37 @@ def create_new_chore():
         return jsonify({"msg":"invalid_data"}), 400
     return jsonify(f"chore {new_chore.title} successfully created"), 201
 
-@chore_bp.route("/<chore_id>/mark_complete", methods=["PATCH"])
-def update_chore(chore_id):
-    chore= get_model_from_id(Chore, chore_id)
-    if chore.member_id == None:
-        return jsonify({"msg":"chore was not assigned"})
-    chore.is_completed = True
-    member = get_model_from_id(Member, chore.member_id)
-    member.points += chore.points
-    db.session.commit()
-    return jsonify({"chore":chore.to_dict()}),200
-
 @chore_bp.route("/<chore_id>/<member_id>", methods=["PATCH"])
+@login_is_required
 def set_member_to_chore(chore_id, member_id):
     chore= get_model_from_id(Chore, chore_id)
     chore.member_id=member_id
     db.session.commit()
     return jsonify({"chore":chore.to_dict()}),200
 
+
+@chore_bp.route("/<chore_id>/mark_complete", methods=["PATCH"])
+@login_is_required
+def update_chore(chore_id):
+    chore= get_model_from_id(Chore, chore_id)
+    member = get_member_from_session()
+
+    if member.family_id != chore.family_id:
+        return jsonify({"msg":"chore is not assigned to you."}),403
+
+    if chore.member_id == None:
+        return jsonify({"msg":"chore was not assigned"})
+    if not chore.is_completed:    
+        chore.is_completed = True
+        member = get_model_from_id(Member, chore.member_id)
+        member.points += chore.points
+        db.session.commit()
+    return jsonify({"chore":chore.to_dict()}),200
+
+
+
 @chore_bp.route('/<chore_id>', methods= ['DELETE'])
+@login_is_required
 def delete_one_chore(chore_id):
     chore_to_delete = get_model_from_id(Chore, chore_id)
     db.session.delete(chore_to_delete)

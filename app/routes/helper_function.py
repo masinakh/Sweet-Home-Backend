@@ -14,10 +14,10 @@ def get_model_from_id(cls,model_id):
 
 def get_member_from_session():
     # print(session["member"])
-    # return Member(**session["member"])
-     return Member (
-            name = session["member"]["name"],
-            email = session["member"]["email"],
-            is_parent = session["member"]["is_parent"]
+    return Member(**session["member"])
+    #  return Member (
+    #         name = session["member"]["name"],
+    #         email = session["member"]["email"],
+    #         is_parent = session["member"]["is_parent"]
     
-        )
+    #     )

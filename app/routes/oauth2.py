@@ -70,6 +70,7 @@ def callback():
     )
 
     session["google_id"] = id_info.get("sub")
+    
     session["name"] = id_info.get("name")
     # print(session["google_id"])
     member = Member.query.filter(Member.email== id_info.get("email")).first()
@@ -78,6 +79,7 @@ def callback():
         member = Member(name= id_info.get("name"), email= id_info.get("email"))
         db.session.add(member)
         db.session.commit()
+
     if session["create_family"] and not member.family_id:
         family = Family()
         db.session.add(family)
@@ -87,9 +89,10 @@ def callback():
         db.session.add(member)
         db.session.commit()
     # print(session)
-    session['member'] = member.to_dict()
+    del session["create_family"] 
+    session["member"] = member.to_dict()
     # print(session['member'])
-    
+    print(member)
     return redirect("/protected_area")
     
 
