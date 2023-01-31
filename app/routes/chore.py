@@ -1,12 +1,10 @@
-from flask import Blueprint, jsonify, request, abort, make_response,session
+from flask import Blueprint, jsonify, request
 from app import db
 from app.models.chore import Chore
 from app.models.member import Member
 from sqlalchemy import and_
 from .helper_function import get_model_from_id, get_member_from_session
 from app.routes.oauth2 import login_is_required
-
-
 
 
 chore_bp = Blueprint("chore_bp", __name__, url_prefix="/chores")
@@ -18,6 +16,7 @@ def get_all_chores():
     chores = Chore.query.filter(and_(Chore.member_id == None,Chore.family_id == member.family_id)).all()  
     chores_list = [chore.to_dict() for chore in chores]
     return jsonify(chores_list), 200
+
 
 @chore_bp.route("", methods=["POST"])
 @login_is_required
@@ -34,6 +33,7 @@ def create_new_chore():
     except KeyError:
         return jsonify({"msg":"invalid_data"}), 400
     return jsonify(f"chore {new_chore.title} successfully created"), 201
+    
 
 @chore_bp.route("/<chore_id>/<member_id>", methods=["PATCH"])
 @login_is_required
@@ -42,8 +42,6 @@ def set_member_to_chore(chore_id, member_id):
     member = get_member_from_session()
     if member.family_id != chore.family_id:
         return jsonify({"msg":"chore is not assigned to you."}),403
-    # do we need to send member_id in the endpoints or we can use member.member_id
-
     chore.member_id=member_id
     db.session.commit()
     return jsonify({"chore":chore.to_dict()}),200
@@ -54,17 +52,15 @@ def set_member_to_chore(chore_id, member_id):
 def update_chore(chore_id):
     chore= get_model_from_id(Chore, chore_id)
     member = get_member_from_session()
-
     if member.family_id != chore.family_id:
         return jsonify({"msg":"chore is not assigned to you."}),403
-
     if chore.member_id == None:
         return jsonify({"msg":"chore was not assigned"})
-    if not chore.is_completed:    
-        chore.is_completed = True
-        member = get_model_from_id(Member, chore.member_id)
-        member.points += chore.points
-        db.session.commit()
+    chore.is_completed = not chore.is_completed
+    points = chore.points if chore.is_completed else -1 * chore.points
+    member_assigned = get_model_from_id(Member, chore.member_id)
+    member_assigned.points += points
+    db.session.commit()
     return jsonify({"chore":chore.to_dict()}),200
 
 

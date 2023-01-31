@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort, make_response
+from flask import Blueprint, jsonify, request
 from app import db
 from sqlalchemy import or_
 from .helper_function import get_model_from_id,get_member_from_session
@@ -7,6 +7,7 @@ from app.routes.oauth2 import login_is_required
 
 
 member_bp = Blueprint("member_bp", __name__, url_prefix="/members")
+
 @member_bp.route("", methods=["GET"])
 @login_is_required
 def get_all_family_members():
@@ -14,6 +15,7 @@ def get_all_family_members():
     members = Member.query.filter(Member.family_id == member.family_id).all() 
     member_list = [member.to_dict() for member in members]
     return jsonify(member_list), 200
+    
 
 @member_bp.route("", methods=["POST"])
 @login_is_required
@@ -28,6 +30,7 @@ def create_new_member():
     except KeyError:
         return jsonify({"msg":"invalid_data"}), 400
     return jsonify(f"Member {new_member.name} successfully created"), 201
+
 
 @member_bp.route('/<member_id>', methods= ['DELETE'])
 @login_is_required

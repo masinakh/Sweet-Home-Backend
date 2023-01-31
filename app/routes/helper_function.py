@@ -1,4 +1,4 @@
-from flask import abort, make_response, request, session
+from flask import abort, make_response, session
 from app.models.member import Member
 
 
@@ -13,11 +13,5 @@ def get_model_from_id(cls,model_id):
     return chosen_object
 
 def get_member_from_session():
-    # print(session["member"]["is_parent"])
     return Member(**session["member"])
-    # return Member (
-    #         name = session["member"]["name"],
-    #         email = session["member"]["email"],
-    #         is_parent = session["member"]["is_parent"]
     
-    #     )

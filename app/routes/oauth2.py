@@ -45,11 +45,9 @@ def login_is_required(function):
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
-    # print(authorization_url)
-    # print(request.args)
-    session["create_family"] = request.args.get("create_family",False)
+    session["create_family"] = request.args.get("create_family",True)
     return redirect(authorization_url)
-# print("test")
+
 
 @oauth_bp.route("/callback")
 def callback():
@@ -70,16 +68,13 @@ def callback():
     )
 
     session["google_id"] = id_info.get("sub")
-    
     session["name"] = id_info.get("name")
-    # print(session["google_id"])
     member = Member.query.filter(Member.email== id_info.get("email")).first()
     
     if not member:
         member = Member(name= id_info.get("name"), email= id_info.get("email"))
         db.session.add(member)
         db.session.commit()
-
     if session["create_family"] and not member.family_id:
         family = Family()
         db.session.add(family)
@@ -88,11 +83,9 @@ def callback():
         member.is_parent = True
         db.session.add(member)
         db.session.commit()
-    # print(session)
+
     del session["create_family"] 
     session["member"] = member.to_dict()
-    print(session['member'])
-    # print(member)
     return redirect("/protected_area")
     
 
