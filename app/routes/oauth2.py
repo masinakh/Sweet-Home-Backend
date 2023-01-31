@@ -45,7 +45,10 @@ def login_is_required(function):
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
-    session["create_family"] = request.args.get("create_family",True)
+    session["create_family"] = True if request.args.get("create_family") == "true" else False
+    # session["create_family"] = request.args.get("create_family",False) 
+    print(session["create_family"])
+    print(request.args)
     return redirect(authorization_url)
 
 
@@ -75,7 +78,15 @@ def callback():
         member = Member(name= id_info.get("name"), email= id_info.get("email"))
         db.session.add(member)
         db.session.commit()
+
+    print("******")
+    print(member.to_dict())
+    print(not member.family_id)     
+
+    print(session["create_family"] and not member.family_id )
+
     if session["create_family"] and not member.family_id:
+        
         family = Family()
         db.session.add(family)
         db.session.commit()
