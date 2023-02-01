@@ -27,7 +27,9 @@ flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
     redirect_uri="https://sweet-home-backend.herokuapp.com/callback"
+    # redirect_uri="http://127.0.0.1:5000/callback"
 )
+
 
 
 def login_is_required(function):
@@ -45,8 +47,8 @@ def login_is_required(function):
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
-    session["create_family"] = True if request.args.get("create_family") == "true" else False
-    # session["create_family"] = request.args.get("create_family",False) 
+    # session["create_family"] = True if request.args.get("create_family") == "true" else False
+    session["create_family"] = request.args.get("create_family",True) 
     print(session["create_family"])
     print(request.args)
     return redirect(authorization_url)
