@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from flask_cors import CORS
+
 # from auth import oauth_bp
 # from app.routes import oauth2
 
@@ -41,4 +43,5 @@ def create_app(test_config=None):
     app.register_blueprint(oauth_bp)
     
     # app.run(debug=True)
+    CORS(app)
     return app
