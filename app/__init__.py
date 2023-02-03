@@ -13,6 +13,7 @@ migrate = Migrate()
 load_dotenv()
 def create_app(test_config=None):
     app = Flask(__name__)
+    # app.config["SESSION_COOKIE_DOMAIN"] = "127.0.0.1:5000 127.0.0.1:3000"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     if test_config is None:
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
