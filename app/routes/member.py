@@ -15,6 +15,12 @@ def get_all_family_members():
     members = Member.query.filter(Member.family_id == member.family_id).all() 
     member_list = [member.to_dict() for member in members]
     return jsonify(member_list), 200
+
+@member_bp.route("/<member_id>", methods=["GET"])
+@login_is_required
+def get_one_member(member_id):
+    member = get_model_from_id(Member,member_id)
+    return jsonify(member), 200
     
 
 @member_bp.route("", methods=["POST"])
