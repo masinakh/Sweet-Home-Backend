@@ -38,6 +38,6 @@ def create_app(test_config=None):
     from .routes.family import family_bp
     app.register_blueprint(family_bp)
     
-    app.run(debug=True)
+    # app.run(debug=True)
     CORS(app)
     return app
