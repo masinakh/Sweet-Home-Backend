@@ -8,7 +8,7 @@ member_bp = Blueprint("member_bp", __name__, url_prefix="/members")
 
 @member_bp.route("/<family_id>", methods=["GET"])
 def get_all_family_members(family_id):
-    members = Member.query.filter(Member.family_id == family_id).all() 
+    members = Member.query.filter(Member.family_id == int(family_id)).all() 
     member_list = [member.to_dict() for member in members]
     return jsonify(member_list), 200
 
