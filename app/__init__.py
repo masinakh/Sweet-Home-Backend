@@ -4,9 +4,6 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-# from auth import oauth_bp
-# from app.routes import oauth2
-
 import os
 db = SQLAlchemy()
 migrate = Migrate()
@@ -31,20 +28,16 @@ def create_app(test_config=None):
     from app.models.family import Family
     db.init_app(app)
     migrate.init_app(app, db)
-    # app.secret_key = os.environ.get("GOOGLE_SECRET_KEY")
-    # # Register Blueprints here
-    # from .routes.chore import chore_bp
-    # app.register_blueprint(chore_bp)
-    # from .routes.reward import reward_bp
-    # app.register_blueprint(reward_bp)
-    # from .routes.member import member_bp
-    # app.register_blueprint(member_bp)
+    # Register Blueprints here
+    from .routes.chore import chore_bp
+    app.register_blueprint(chore_bp)
+    from .routes.reward import reward_bp
+    app.register_blueprint(reward_bp)
+    from .routes.member import member_bp
+    app.register_blueprint(member_bp)
     from .routes.family import family_bp
     app.register_blueprint(family_bp)
-   
-    # from app.routes.oauth2 import oauth_bp
-    # app.register_blueprint(oauth_bp)
     
-    # app.run(debug=True)
+    app.run(debug=True)
     CORS(app)
     return app

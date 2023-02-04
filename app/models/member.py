@@ -27,7 +27,8 @@ class Member(db.Model):
         return Member (
             name=member_dict["name"],
             email = member_dict["email"],
-            is_parent = member_dict["is_parent"]
+            is_parent = member_dict["isParent"],
+            family_id = member_dict["familyId"]
         )
 
 
