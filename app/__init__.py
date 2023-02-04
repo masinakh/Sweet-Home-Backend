@@ -24,10 +24,10 @@ def create_app(test_config=None):
             "SQLALCHEMY_TEST_DATABASE_URI")
     # Import models here for Alembic setup
    
-    # from app.models.chore import Chore
-    # from app.models.reward import Reward
-    # from app.models.member import Member
-    # from app.models.member_reward import MemberReward
+    from app.models.chore import Chore
+    from app.models.reward import Reward
+    from app.models.member import Member
+    from app.models.member_reward import MemberReward
     from app.models.family import Family
     db.init_app(app)
     migrate.init_app(app, db)

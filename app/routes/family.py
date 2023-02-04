@@ -20,4 +20,4 @@ def create_new_family():
     db.session.add(new_family)
     db.session.commit()
   
-    return jsonify(f"Family Id {new_family.id} successfully created"), 201
+    return jsonify({"id":new_family.id}), 201
