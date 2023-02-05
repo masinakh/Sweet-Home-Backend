@@ -11,7 +11,7 @@ reward_bp = Blueprint("reward_bp", __name__, url_prefix="/rewards")
 
 @reward_bp.route("/<family_id>", methods=["GET"])
 def get_all_rewards(family_id):
-    rewards = Reward.query.filter(Reward.family_id == family_id).all() 
+    rewards = Reward.query.filter(Reward.family_id == int(family_id)).all() 
     reward_list = [reward.to_dict() for reward in rewards]
     return jsonify(reward_list), 200
 

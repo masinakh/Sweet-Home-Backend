@@ -9,7 +9,7 @@ chore_bp = Blueprint("chore_bp", __name__, url_prefix="/chores")
 
 @chore_bp.route("/<family_id>", methods=["GET"])
 def get_all_chores(family_id):
-    chores = Chore.query.filter(and_(Chore.member_id == None,Chore.family_id ==family_id)).all()  
+    chores = Chore.query.filter(and_(Chore.member_id == None,Chore.family_id ==int(family_id))).all()  
     chores_list = [chore.to_dict() for chore in chores]
     return jsonify(chores_list), 200
 
@@ -29,7 +29,7 @@ def create_new_chore():
 @chore_bp.route("/<chore_id>/<member_id>", methods=["PATCH"])
 def set_member_to_chore(chore_id, member_id):
     chore= get_model_from_id(Chore, chore_id)
-    chore.member_id=member_id
+    chore.member_id=int(member_id)
     db.session.commit()
     return jsonify({"chore":chore.to_dict()}),200
 
