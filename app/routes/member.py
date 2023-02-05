@@ -15,7 +15,8 @@ def get_all_family_members(family_id):
 @member_bp.route("/<member_id>", methods=["GET"])
 def get_one_member(member_id):
     member = get_model_from_id(Member,member_id)
-    return jsonify(member), 200
+    print("#########",member.to_dict())
+    return jsonify({"member":member.to_dict()}), 200
     
 
 @member_bp.route("", methods=["POST"])
