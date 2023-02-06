@@ -12,7 +12,7 @@ def get_all_family_members(family_id):
     member_list = [member.to_dict() for member in members]
     return jsonify(member_list), 200
 
-@member_bp.route("/<member_id>", methods=["GET"])
+@member_bp.route("/<member_id>/member", methods=["GET"])
 def get_one_member(member_id):
     member = get_model_from_id(Member,member_id)
     print("#########",member.to_dict())
