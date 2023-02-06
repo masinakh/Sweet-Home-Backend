@@ -23,7 +23,8 @@ class Chore(db.Model):
     def from_dict(cls, chore_dict):
         return Chore (
             title=chore_dict["title"],
-            points=chore_dict["points"]
+            points=chore_dict["points"],
+            family_id = chore_dict["familyId"]
         )
 
 

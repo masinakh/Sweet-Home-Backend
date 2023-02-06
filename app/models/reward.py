@@ -19,5 +19,6 @@ class Reward(db.Model):
     def from_dict(cls, reward_dict):
         return Reward (
                 title=reward_dict["title"],
-                points=reward_dict["points"]
+                points=reward_dict["points"],
+                family_id = reward_dict["familyId"]
             )
