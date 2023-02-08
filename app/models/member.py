@@ -20,7 +20,9 @@ class Member(db.Model):
             "points": self.points,
             "is_parent": self.is_parent,
             "family_id": self.family_id,
-        }
+            "chores":[chore.to_dict() for chore in self.chores],
+            "rewards":[reward.to_dict() for reward in self.rewards]
+         }
 
     @classmethod
     def from_dict(cls, member_dict):
